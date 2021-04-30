@@ -41,6 +41,7 @@ func (t *TextBundleToEpub) process(textbundle string) (err error) {
 	if err != nil {
 		return
 	}
+	defer mdf.Close()
 
 	md, err := ioutil.ReadAll(mdf)
 	if err != nil {
@@ -53,6 +54,7 @@ func (t *TextBundleToEpub) process(textbundle string) (err error) {
 	}
 
 	t.setBirthMeta(textbundle, doc)
+	t.setTitle(textbundle, doc)
 	t.changeImageRef(textbundle, doc)
 
 	html, err := doc.Html()
@@ -87,6 +89,14 @@ func (t *TextBundleToEpub) setBirthMeta(textbundle string, doc *goquery.Document
 		return
 	}
 }
+func (t *TextBundleToEpub) setTitle(textbundle string, doc *goquery.Document) {
+	if doc.Find("title").Length() == 0 {
+		doc.Find("head").AppendHtml("<title></title>")
+	}
+	if doc.Find("title").Text() == "" {
+		doc.Find("title").SetText(strings.TrimSuffix(filepath.Base(textbundle), filepath.Ext(textbundle)))
+	}
+}
 func (t *TextBundleToEpub) changeImageRef(basedir string, doc *goquery.Document) {
 	doc.Find("img").Each(func(i int, img *goquery.Selection) {
 		src, _ := img.Attr("src")
@@ -99,6 +109,7 @@ func (t *TextBundleToEpub) changeImageRef(basedir string, doc *goquery.Document)
 			return
 		}
 
+		// may be problems on Windows
 		ref := filepath.Join(basedir, src)
 
 		// be compatible with bear
