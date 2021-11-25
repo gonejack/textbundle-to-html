@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/url"
 	"os"
 	"path/filepath"
@@ -43,7 +43,7 @@ func (t *TextBundleToEpub) process(textbundle string) (err error) {
 	}
 	defer mdf.Close()
 
-	md, err := ioutil.ReadAll(mdf)
+	md, err := io.ReadAll(mdf)
 	if err != nil {
 		return
 	}
@@ -63,7 +63,7 @@ func (t *TextBundleToEpub) process(textbundle string) (err error) {
 	}
 
 	save := strings.TrimSuffix(textbundle, filepath.Ext(textbundle)) + ".html"
-	err = ioutil.WriteFile(save, []byte(html), 0666)
+	err = os.WriteFile(save, []byte(html), 0666)
 
 	return
 }
