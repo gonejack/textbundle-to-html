@@ -70,7 +70,6 @@ func (t *TextBundleToEpub) process(textbundle string) (err error) {
 func (t *TextBundleToEpub) md2Html(md []byte) (html []byte) {
 	return markdown.ToHTML(md, nil, nil)
 }
-
 func (t *TextBundleToEpub) setBirthMeta(textbundle string, doc *goquery.Document) {
 	pubTime := time.Now()
 	defer func() {
@@ -134,7 +133,6 @@ func getBirthTime(filepath string) (time.Time, error) {
 
 	return t.BirthTime(), nil
 }
-
 func getModTime(filepath string) (time.Time, error) {
 	t, err := times.Stat(filepath)
 	if err != nil {
