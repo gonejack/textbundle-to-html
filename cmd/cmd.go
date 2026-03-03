@@ -29,7 +29,7 @@ func (t *TextBundleToEpub) Run(textBundles []string) (err error) {
 	for _, tb := range textBundles {
 		err = t.process(tb)
 		if err != nil {
-			err = fmt.Errorf("parse %s failed: %s", tb, err)
+			err = fmt.Errorf("parse %s failed: %w", tb, err)
 			return
 		}
 	}
